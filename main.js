@@ -1,14 +1,24 @@
-const canvas = document.getElementById('gameCanvas');
+// キャンバス関係
+const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
+const CANVAS_W = 800;
+const CANVAS_H = 800;
 
-canvas.width = 800;
-canvas.height = 800;
+canvas.width = CANVAS_W;
+canvas.height = CANVAS_H;
 
+// 定数変数関係
 let isGameOver = false;
 let startTime = null;
 
+// 関数関係
+const rand=(min,max)=>{
+  return Math.floor(Math.random()*(max-min+1)+min);
+};
+
+// 各定義
 const player = {
-  x: canvas.width / 2,
+  x: CANVAS_W/ 2,
   y: 20,
   width: 40,
   height: 40,
@@ -22,13 +32,14 @@ const player = {
 
 const boxes = [];
 
-function createBox() {
+
+const createBox=()=>{
   const box = {
-    width: Math.random() * canvas.width / 4.2,
-    height: Math.random() * 50 + 20,
-    x: canvas.width,
-    y: canvas.height - 100 - Math.random() * 100,
-    speed:Math.random() * 10,
+    width: rand(1,300),
+    height: rand(1,100),
+    x: CANVAS_W,
+    y: rand(CANVAS_H/2,CANVAS_H),
+    speed:rand(1,30),
     boxflag: false,
   };
   boxes.push(box);
@@ -36,8 +47,8 @@ function createBox() {
 
 
 
-
-function loop(timestamp) {
+// メイン処理
+const loop=(timestamp)=> {
   if (!startTime) {
     startTime = timestamp;
   }
@@ -111,6 +122,8 @@ function loop(timestamp) {
   requestAnimationFrame(loop);
 }
 
+
+// コントローラー関係
 document.addEventListener('keydown', (event) => {
   if (event.key === 'ArrowLeft') {
     player.vx = -player.speed;
@@ -121,7 +134,6 @@ document.addEventListener('keydown', (event) => {
     player.isJumping = true;
   }
 });
-
 document.addEventListener('keyup', (event) => {
   if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
     player.vx = 0;

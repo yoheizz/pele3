@@ -14,16 +14,33 @@ let startTime = null;
 const rand=(min,max)=>{
   return Math.floor(Math.random()*(max-min+1)+min);
 };
-const checkCollision=(objA, objB)=> {
-    return (
-        objA.x + objA.width > objB.x &&
-        objA.x < objB.x + objB.width &&
-        objA.y + objA.height > objB.y &&
-        objA.y < objB.y + objB.height &&
-        objA.vy >= 0
-    );
-};
 
+const checkCollision=(A, B)=> {
+    if(         //A=player
+        A.x + A.width > B.x &&
+        A.x < B.x + B.width &&
+        A.y + A.height > B.y &&
+        A.y < B.y + B.height &&
+        A.vy >= 0
+    ){  
+        A.y = B.y - A.height;
+        A.vy = 0;
+        A.isJumping = false;
+    }
+};
+const checkGameover=(e)=>{
+    if(e.y>=CANVAS_H){
+        isGameOver = true;
+    }
+}
+const gameover=()=>{
+    ctx.fillStyle = 'green';
+    ctx.fillRect(0,0,CANVAS_W,CANVAS_H);
+    ctx.fillStyle = 'black';
+    ctx.font = '48px Arial';
+    ctx.fillText(`頑張った時間:秒`,CANVAS_W/2,CANVAS_H/2);
+    console.log("gameover")
+};  
 
 
 // 各クラス
@@ -36,7 +53,7 @@ class Player{
         this.vx = 0;
         this.vy = 0;
         this.vg = 0.5;
-        this.jumpStrength = -15;
+        this.jumpStrength = -20;
         this.isJumping = false;
         this.speed = 8;
         }
@@ -53,7 +70,7 @@ class Player{
         this.vy += this.vg;
         this.x += this.vx;
         this.y += this.vy;
-        // コントローラー関係
+        //キー操作
         document.addEventListener('keydown', (event) => {
             if (event.key === 'ArrowLeft') {
             this.vx = -this.speed;
@@ -69,7 +86,31 @@ class Player{
             this.vx = 0;
             }
         });
-    }
+        //タッチ操作
+        const jumpButton = document.getElementById('Jump');
+        const leftButton = document.getElementById('Left');
+        const rightButton = document.getElementById('Right');
+
+        jumpButton.addEventListener('touchstart', () => {
+        if (!player.isJumping) {
+            player.vy = player.jumpStrength;
+            player.isJumping = true;
+        }
+        });
+        
+        leftButton.addEventListener('touchstart', () => {
+        player.vx = -player.speed;
+        });
+        
+        rightButton.addEventListener('touchstart', () => {
+        player.vx = player.speed;
+        });
+        
+        document.addEventListener('touchend', () => {
+        player.vx = 0;
+        });
+
+}
 }
 
 class Box{
@@ -119,14 +160,15 @@ const loop = () => {
     //box
     createBox();
     for (const box of boxes) {
-        if (checkCollision(player, box)) {
-            // プレイヤーがボックスに接触した場合
-        
-        }
+        checkCollision(player, box);
         box.draw();
         box.update();
     };
-    
+    //gameover
+    checkGameover(player);
+    if(isGameOver){
+        gameover();
+    }
     requestAnimationFrame(loop);
 };
 

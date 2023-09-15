@@ -34,12 +34,11 @@ const checkGameover=(e)=>{
     }
 }
 const gameover=()=>{
-    ctx.fillStyle = 'green';
+    ctx.fillStyle = 'tomato';
     ctx.fillRect(0,0,CANVAS_W,CANVAS_H);
     ctx.fillStyle = 'black';
     ctx.font = '48px Arial';
     ctx.fillText(`頑張った時間:秒`,CANVAS_W/2,CANVAS_H/2);
-    console.log("gameover")
 };  
 
 
@@ -53,13 +52,13 @@ class Player{
         this.vx = 0;
         this.vy = 0;
         this.vg = 0.5;
-        this.jumpStrength = -20;
+        this.jumpStrength = -15;
         this.isJumping = false;
         this.speed = 8;
         }
     draw(){
-        ctx.strokeStyle = 'blue';
-        ctx.fillStyle = 'red';
+        ctx.strokeStyle = 'pink';
+        ctx.fillStyle = 'pink';
         ctx.strokeRect(this.x, this.y, this.width, this.height);
         ctx.fillRect(this.x + 10, this.y + 5, this.width / 5, this.height / 5);
         ctx.fillRect(this.x + this.width - 15, this.y + 5, this.width / 5, this.height / 5);

@@ -14,6 +14,17 @@ let startTime = null;
 const rand=(min,max)=>{
   return Math.floor(Math.random()*(max-min+1)+min);
 };
+const checkCollision=(objA, objB)=> {
+    return (
+        objA.x + objA.width > objB.x &&
+        objA.x < objB.x + objB.width &&
+        objA.y + objA.height > objB.y &&
+        objA.y < objB.y + objB.height &&
+        objA.vy >= 0
+    );
+};
+
+
 
 // 各クラス
 class Player{
@@ -68,21 +79,22 @@ class Box{
     this.width = rand(1,300);
     this.height = rand(1,100);
     this.speed = rand(1,30);
-    this.boxflag = false;
+    this.up = rand(0,3);
     };
     draw(){
         ctx.fillStyle = 'brown';
         ctx.fillRect(this.x, this.y, this.width, this.height);
     };
     update() {
-        if (this.x + this.width < 0) {
-            // ボックスが画面外に出たら削除
+        // ボックスが画面外に出たら削除
+        if (this.x + this.width < 0||this.y + this.height < 0) {
             const index = boxes.indexOf(this);
         if (index !== -1) {
             boxes.splice(index, 1);
         }
         } else {
             this.x -= this.speed;
+            this.y += Math.sin(this.speed)*this.up;
         }
     }
 }
@@ -90,22 +102,28 @@ class Box{
 //new
 const player = new Player();
 const boxes = [];
-    for (let i = 0; i < rand(5,10); i++) {
-        boxes.push(new Box());
-    }
+//boxランダム生成
+const createBox = () => {
+        if(rand(0,10)===0){
+            boxes.push(new Box());
+        }
+    };
 
 //メイン処理
-const loop=()=> {
+const loop = () => {
     //リセット処理
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    player.draw();    
-    for (const box of boxes) {
-        box.draw();
-    };
-   
-     // 移動系
+    //player
+    player.draw();
     player.update();
+    //box
+    createBox();
     for (const box of boxes) {
+        if (checkCollision(player, box)) {
+            // プレイヤーがボックスに接触した場合
+        
+        }
+        box.draw();
         box.update();
     };
     
@@ -113,6 +131,6 @@ const loop=()=> {
 };
 
 //関数呼び出し
-window.onload=()=>{
+window.onload = () => {
     requestAnimationFrame(loop);
 };

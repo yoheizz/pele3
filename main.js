@@ -9,6 +9,7 @@ canvas.height = CANVAS_H;
 // 定数変数関係
 let isGameOver = false;
 let startTime = null;
+let animationRequestId = null;
 
 // 関数関係
 const rand=(min,max)=>{
@@ -31,16 +32,23 @@ const checkCollision=(A, B)=> {
 const checkGameover=(e)=>{
     if(e.y>=CANVAS_H){
         isGameOver = true;
+        cancelAnimationFrame(animationRequestId); // アニメーションを停止
     }
 }
-const gameover=()=>{
+const gameover = () => {
     ctx.fillStyle = 'tomato';
-    ctx.fillRect(0,0,CANVAS_W,CANVAS_H);
+    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
     ctx.fillStyle = 'black';
     ctx.font = '48px Arial';
-    ctx.fillText(`頑張った時間:秒`,CANVAS_W/2,CANVAS_H/2);
-};  
-
+    
+    // gameover() 関数が呼ばれた時間を取得
+    const currentTime = performance.now();
+    // 経過時間を計算し、秒単位に変換
+    
+    const elapsedTimeInSeconds = Math.floor((currentTime - startTime) / 1000);
+    // elapsedTimeInSeconds = eval(elapsedTimeInSeconds);
+    ctx.fillText(`頑張った時間: ${elapsedTimeInSeconds} 秒`, CANVAS_W / 4, CANVAS_H / 2);
+};
 
 // 各クラス
 class Player{
@@ -173,5 +181,6 @@ const loop = () => {
 
 //関数呼び出し
 window.onload = () => {
+    startTime = performance.now(); // ゲームが開始された時間を記録
     requestAnimationFrame(loop);
 };

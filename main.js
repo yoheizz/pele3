@@ -9,7 +9,7 @@ canvas.height = CANVAS_H;
 // 定数変数関係
 let isGameOver = false;
 let startTime = null;
-let animationRequestId = null;
+let currentTime =null;
 
 // 関数関係
 const rand=(min,max)=>{
@@ -32,7 +32,6 @@ const checkCollision=(A, B)=> {
 const checkGameover=(e)=>{
     if(e.y>=CANVAS_H){
         isGameOver = true;
-        cancelAnimationFrame(animationRequestId); // アニメーションを停止
     }
 }
 const gameover = () => {
@@ -40,14 +39,10 @@ const gameover = () => {
     ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
     ctx.fillStyle = 'black';
     ctx.font = '48px Arial';
-    
-    // gameover() 関数が呼ばれた時間を取得
-    const currentTime = performance.now();
-    // 経過時間を計算し、秒単位に変換
-    
-    const elapsedTimeInSeconds = Math.floor((currentTime - startTime) / 1000);
-    // elapsedTimeInSeconds = eval(elapsedTimeInSeconds);
+    currentTime = performance.now();
+    const elapsedTimeInSeconds = ((currentTime - startTime)/1000).toFixed(2);
     ctx.fillText(`頑張った時間: ${elapsedTimeInSeconds} 秒`, CANVAS_W / 4, CANVAS_H / 2);
+    document.getElementById("restart").style.display= "initial";
 };
 
 // 各クラス
@@ -63,10 +58,10 @@ class Player{
         this.jumpStrength = -15;
         this.isJumping = false;
         this.speed = 8;
-        }
+    }
     draw(){
-        ctx.strokeStyle = 'pink';
-        ctx.fillStyle = 'pink';
+        ctx.strokeStyle = 'black';
+        ctx.fillStyle = 'red';
         ctx.strokeRect(this.x, this.y, this.width, this.height);
         ctx.fillRect(this.x + 10, this.y + 5, this.width / 5, this.height / 5);
         ctx.fillRect(this.x + this.width - 15, this.y + 5, this.width / 5, this.height / 5);
@@ -103,7 +98,7 @@ class Player{
             player.vy = player.jumpStrength;
             player.isJumping = true;
         }
-        });
+    });
         
         leftButton.addEventListener('touchstart', () => {
         player.vx = -player.speed;
@@ -111,11 +106,11 @@ class Player{
         
         rightButton.addEventListener('touchstart', () => {
         player.vx = player.speed;
-        });
+    });
         
         document.addEventListener('touchend', () => {
         player.vx = 0;
-        });
+    });
 
 }
 }
@@ -126,7 +121,7 @@ class Box{
     this.y = rand(CANVAS_H/2,CANVAS_H);
     this.width = rand(1,300);
     this.height = rand(1,100);
-    this.speed = rand(1,30);
+    this.speed = rand(5,30);
     this.up = rand(0,3);
     };
     draw(){
@@ -152,13 +147,14 @@ const player = new Player();
 const boxes = [];
 //boxランダム生成
 const createBox = () => {
-        if(rand(0,10)===0){
+        if(rand(0,15)===0){
             boxes.push(new Box());
         }
     };
 
 //メイン処理
 const loop = () => {
+if(!isGameOver){
     //リセット処理
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     //player
@@ -173,10 +169,11 @@ const loop = () => {
     };
     //gameover
     checkGameover(player);
-    if(isGameOver){
-        gameover();
-    }
+
     requestAnimationFrame(loop);
+}else{
+    gameover();
+}
 };
 
 //関数呼び出し

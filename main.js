@@ -39,10 +39,37 @@ const gameover = () => {
     ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
     ctx.fillStyle = 'black';
     ctx.font = '48px Arial';
+
     currentTime = performance.now();
     const elapsedTimeInSeconds = ((currentTime - startTime)/1000).toFixed(2);
-    ctx.fillText(`頑張った時間: ${elapsedTimeInSeconds} 秒`, CANVAS_W / 4, CANVAS_H / 2);
+
+    ctx.fillText(`頑張った時間: ${elapsedTimeInSeconds} 秒`, CANVAS_W/5, CANVAS_H-100);
+    
     document.getElementById("restart").style.display= "initial";
+    
+    const getHighScores =()=> {
+        const scoresJSON = localStorage.getItem("highScores");
+        return scoresJSON ? JSON.parse(scoresJSON) : [];
+    }
+    
+    const addScore =(score)=> {
+        const highScores = getHighScores();
+        highScores.push(score);
+    
+        highScores.sort((a, b) => b - a);
+    
+        const top5Scores = highScores.slice(0, 5);
+    
+        localStorage.setItem("highScores", JSON.stringify(top5Scores));
+    }
+    
+    addScore(elapsedTimeInSeconds);
+    
+    const top5Scores = getHighScores();
+
+    top5Scores.forEach((score, index) => {
+        ctx.fillText(`ランク${index + 1}: スコア ${score}秒`,CANVAS_W/5,100*(index+1));
+    });
 };
 
 // 各クラス

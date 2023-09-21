@@ -8,22 +8,22 @@
 </head>
 <style></style>
 <body>
-    
-    <div class="canvas-container">
-        <canvas class="canvas" id="canvas"></canvas>
-    </div>  
-    
-    <div class="button-group">
-        <button id="Jump">　JUMP　</button>
-    </div>
-
-    <div class="button-group">    
-        <button id="Left">　L　</button>
-        <button id="Right">　R　</button>
-    </div>
-
-    <button onclick="location.reload()" id="restart">リトライ</button>
+    <div id="adjust">
+        <div class="canvas-container">
+            <canvas class="canvas" id="canvas"></canvas>
+        </div>  
         
+        <div class="button-group">
+            <button id="Jump">　JUMP　</button>
+        </div>
+
+        <div class="button-group">    
+            <button id="Left">　L　</button>
+            <button id="Right">　R　</button>
+        </div>
+    </div>
+    <button onclick="location.reload()" id="restart">リトライ</button>
+    <div id="warning">縦向きで遊んでください</div>    
     <script src="main.js"></script>
 </body>
 </html>

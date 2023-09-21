@@ -31,3 +31,9 @@ body{
   #restart{
     display: none;
   }
+
+  #warning{
+    display: none;
+    font-size: xx-large;
+    color: yellow;
+  }

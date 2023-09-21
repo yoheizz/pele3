@@ -46,7 +46,7 @@ const gameover = () => {
     ctx.fillText(`頑張った時間: ${elapsedTimeInSeconds} 秒`, CANVAS_W/5, CANVAS_H-100);
     
     document.getElementById("restart").style.display= "initial";
-    
+    // ローカルストレージ
     const getHighScores =()=> {
         const scoresJSON = localStorage.getItem("highScores");
         return scoresJSON ? JSON.parse(scoresJSON) : [];
@@ -71,6 +71,29 @@ const gameover = () => {
         ctx.fillText(`ランク${index + 1}: スコア ${score}秒`,CANVAS_W/5,100*(index+1));
     });
 };
+// 画面の向き
+const checkDisplay=()=> {
+    const isLandscape = window.innerWidth > window.innerHeight;
+    if (isLandscape) {
+        document.getElementById('adjust').style.display ='none'
+        document.getElementById('warning').style.display ='block'
+    }else{
+        document.getElementById('adjust').style.display ='initial'
+        document.getElementById('warning').style.display ='none'
+    }
+}
+// 画面切り替えロック時
+const checkLock=()=>{
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+            startTime = performance.now();
+        }else if (document.visibilityState === 'visible') {
+            startTime = performance.now();
+            isGameOver = true;
+            gameover();
+        }
+    });
+}
 
 // 各クラス
 class Player{
@@ -195,7 +218,9 @@ if(!isGameOver){
         box.update();
     };
     //gameover
+    checkLock();
     checkGameover(player);
+    
 
     requestAnimationFrame(loop);
 }else{
@@ -205,6 +230,7 @@ if(!isGameOver){
 
 //関数呼び出し
 window.onload = () => {
+    checkDisplay();
     startTime = performance.now(); // ゲームが開始された時間を記録
     requestAnimationFrame(loop);
 };

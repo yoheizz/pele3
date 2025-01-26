@@ -28,10 +28,36 @@ const checkCollision=(A, B)=> {
         A.y = B.y - A.height;
         A.vy = 0;
         A.isJumping = false;
+
         //ボックスに応じて能力変更
-        A.jumpStrength = -B.jumpStrength;
-        A.height = B.jumpStrength*2.67;
-        A.width = B.jumpStrength*2.67;
+
+        
+        if(B.ability >=1 && B.ability < 2){
+            //黒
+            A.jumpStrength = -5
+            A.height =20
+            A.width = 100
+            B.up = -10
+            B.speed = 1
+            A.vg = 0.5
+        }else if(B.ability >=2 && B.ability < 3){
+            //金
+            A.jumpStrength = -35
+            A.height = 120
+            A.width = 120
+            A.vg = 1
+        }else if(B.ability >=3 && B.ability < 4){
+            //緑
+            A.jumpStrength = -10
+            A.height= 100
+            A.width= 20
+            A.vg =0.2
+        }else{
+            A.jumpStrength = -20
+            A.height=40
+            A.width= 40
+            A.vg = 0.5
+        };
     }
 };
 const checkGameover=(e)=>{
@@ -185,16 +211,12 @@ class Box{
         //アビリティで色等変更
         if(this.ability >=1 && this.ability < 2){
             ctx.fillStyle = "black"
-            this.jumpStrength = 5
         }else if(this.ability >=2 && this.ability < 3){
             ctx.fillStyle = "gold"
-            this.jumpStrength = 35
         }else if(this.ability >=3 && this.ability < 4){
             ctx.fillStyle = "springgreen"
-            this.jumpStrength = 10
         }else{
             ctx.fillStyle = "brown"
-            this.jumpStrength =15
         };
         ctx.fillRect(this.x, this.y, this.width, this.height);
     };

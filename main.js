@@ -28,8 +28,10 @@ const checkCollision=(A, B)=> {
         A.y = B.y - A.height;
         A.vy = 0;
         A.isJumping = false;
-
-        A.jumpStrength = -B.jumpStrength
+        //ボックスに応じて能力変更
+        A.jumpStrength = -B.jumpStrength;
+        A.height = B.jumpStrength*2.67;
+        A.width = B.jumpStrength*2.67;
     }
 };
 const checkGameover=(e)=>{
@@ -180,12 +182,13 @@ class Box{
     this.ability = rand(1,10);
     };
     draw(){
+        //アビリティで色等変更
         if(this.ability >=1 && this.ability < 2){
             ctx.fillStyle = "black"
             this.jumpStrength = 5
         }else if(this.ability >=2 && this.ability < 3){
             ctx.fillStyle = "gold"
-            this.jumpStrength = 25
+            this.jumpStrength = 35
         }else if(this.ability >=3 && this.ability < 4){
             ctx.fillStyle = "springgreen"
             this.jumpStrength = 10

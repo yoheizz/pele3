@@ -33,27 +33,39 @@ const checkCollision = (A, B) => {
     if (B.ability >= 1 && B.ability < 2) {
       // 黒
       A.jumpStrength = -5;
-      A.height = 20;
-      A.width = 100;
-      B.up = -10;
+      A.height = B.height;
+      A.width = B.width;
+      B.up = -20;
       B.speed = 1;
       A.vg = 0.5;
+      canvas.style.backgroundColor ='';
     } else if (B.ability >= 2 && B.ability < 3) {
       // 金
       A.jumpStrength = -35;
       A.height = 200;
       A.width = 200;
-      A.vg = 1;
+      A.vg = 1.5;
+      for(let i = 1; i < 20; i++){
+        createBox()
+      };
+      canvas.style.backgroundColor ='black';
     } else if (B.ability >= 3 && B.ability < 4) {
       // 緑
       A.jumpStrength = -10;
       A.height = 20;
       A.width = 20;
       A.vg = 0.2;
+      B.speed = B.speed*2
+      for(let i = 1; i < 10; i++){
+        createBox()
+      };
+      canvas.style.backgroundColor ='';
     } else {
+      if(A.height<200){
+        A.height = 40;
+        A.width = 40;
+      };
       A.jumpStrength = -20;
-      A.height = 40;
-      A.width = 40;
       A.vg = 0.5;
     }
   }
@@ -73,7 +85,7 @@ const gameover = () => {
 
   currentTime = performance.now();
   const elapsedTimeInSeconds = ((currentTime - startTime) / 1000).toFixed(2);
-  const seconds = (elapsedTimeInSeconds % 60).toFixed(2)-1;
+  const seconds = (-1 + elapsedTimeInSeconds % 60).toFixed(2);
 
   ctx.fillText(`頑張った時間: ${seconds}秒`, CANVAS_W / 5, CANVAS_H - 100);
   
@@ -108,8 +120,12 @@ const gameover = () => {
 const checkDisplay = () => {
   const isLandscape = window.innerWidth > window.innerHeight;
   if (isLandscape) {
-    document.getElementById('adjust').style.display = 'none';
-    document.getElementById('warning').style.display = 'block';
+    document.getElementById('adjust').style.display = 'initial';
+    document.getElementById('warning').style.display = 'none';
+    document.getElementById('buttonG').style.display = 'none';
+    document.getElementById('canvas').style.maxWidth = '700px';
+    document.getElementById('canvas').style.maxHeight = '700px';
+
   } else {
     document.getElementById('adjust').style.display = 'initial';
     document.getElementById('warning').style.display = 'none';
@@ -167,6 +183,7 @@ class Player {
     // 最初の1秒間は落下しない
     if (elapsedTimeInSeconds < 1) {
       this.vy = 0; // 落下速度を0にする
+      this.vx = 0;
     } else {
       // 落下処理
       this.vy += this.vg;
@@ -265,12 +282,13 @@ const createBox = () => {
 };
 
 // マグマが波打つ描画
+let magumaHeight =30;
 const drawMaguma = () => {
   ctx.fillStyle = "red";
   const waveHeight = 10;
   for (let i = 0; i < CANVAS_W; i++) {
     const waveOffset = Math.sin((i + performance.now() / 50) * 0.5) * waveHeight;
-    ctx.fillRect(i, CANVAS_H - 30 + waveOffset, 1, 50); // 波の動き
+    ctx.fillRect(i, CANVAS_H - magumaHeight + waveOffset, 1, 50); // 波の動き
   }
 };
 

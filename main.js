@@ -16,8 +16,9 @@ const rand=(min,max)=>{
   return Math.floor(Math.random()*(max-min+1)+min);
 };
 
+//当たり判定
 const checkCollision=(A, B)=> {
-    if(         //A=player
+    if(         //A=player B=box
         A.x + A.width > B.x &&
         A.x < B.x + B.width &&
         A.y + A.height > B.y &&
@@ -27,6 +28,8 @@ const checkCollision=(A, B)=> {
         A.y = B.y - A.height;
         A.vy = 0;
         A.isJumping = false;
+
+        A.jumpStrength = -B.jumpStrength
     }
 };
 const checkGameover=(e)=>{
@@ -105,9 +108,9 @@ class Player{
         this.vx = 0;
         this.vy = 0;
         this.vg = 0.5;
-        this.jumpStrength = -15;
+        this.jumpStrength = -20;
         this.isJumping = false;
-        this.speed = 8;
+        this.speed = 15;
     }
     draw(){
         ctx.strokeStyle = 'black';
@@ -173,9 +176,23 @@ class Box{
     this.height = rand(1,100);
     this.speed = rand(5,30);
     this.up = rand(0,3);
+
+    this.ability = rand(1,10);
     };
     draw(){
-        ctx.fillStyle = 'brown';
+        if(this.ability >=1 && this.ability < 2){
+            ctx.fillStyle = "black"
+            this.jumpStrength = 5
+        }else if(this.ability >=2 && this.ability < 3){
+            ctx.fillStyle = "gold"
+            this.jumpStrength = 25
+        }else if(this.ability >=3 && this.ability < 4){
+            ctx.fillStyle = "springgreen"
+            this.jumpStrength = 10
+        }else{
+            ctx.fillStyle = "brown"
+            this.jumpStrength =15
+        };
         ctx.fillRect(this.x, this.y, this.width, this.height);
     };
     update() {

@@ -55,7 +55,7 @@ const checkCollision = (A, B) => {
       A.height = 20;
       A.width = 20;
       A.vg = 0.2;
-      B.speed = B.speed*2
+      B.speed = B.speed*0.9
       for(let i = 1; i < 10; i++){
         createBox()
       };
@@ -64,9 +64,9 @@ const checkCollision = (A, B) => {
       if(A.height<200){
         A.height = 40;
         A.width = 40;
+        A.jumpStrength = -20;
+        A.vg = 0.5;
       };
-      A.jumpStrength = -20;
-      A.vg = 0.5;
     }
   }
 };
@@ -85,11 +85,12 @@ const gameover = () => {
 
   currentTime = performance.now();
   const elapsedTimeInSeconds = ((currentTime - startTime) / 1000).toFixed(2);
-  const seconds = (-1 + elapsedTimeInSeconds % 60).toFixed(2);
+  const seconds = (elapsedTimeInSeconds % 60).toFixed(2)-1;
 
   ctx.fillText(`頑張った時間: ${seconds}秒`, CANVAS_W / 5, CANVAS_H - 100);
   
   document.getElementById("restart").style.display = "initial";
+  document.getElementById("buttonG").style.display = "none";
 
   // ローカルストレージ
   const getHighScores = () => {
